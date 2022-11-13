@@ -1,3 +1,3 @@
-# HandDetection-RockPaperScissors
-Gesture detection and Markov chain to predict moves. Rock paper scissors A.I. 
+Rock Paper Scissors A.I.
+Gesture detection and Markov chain to predict moves.
 ![](/rps.png)
