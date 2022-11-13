@@ -5,6 +5,12 @@ import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector
 
+
+# PRESS SPACE TO START.
+# THE A.I. USES A MARKOV CHAIN AND HAND GESTURE DETECTION FOR MOVING.
+
+
+
 cap = cv2.VideoCapture(0)
 cap.set(3, 640)  # width
 cap.set(4, 480)
@@ -20,6 +26,9 @@ opponent_history = []
 
 steps = {}
 
+
+##############
+# markov chain:
 def player(prev_play, opponent_history=[]):
     global randomNumber
     global playerMove
@@ -38,7 +47,7 @@ def player(prev_play, opponent_history=[]):
         possib = [patterns + 1, patterns + 2, patterns + 3]
         for i in possib:
             if not i in steps.keys():
-                steps[i] = 0               ###
+                steps[i] = 0  ###
         pred = max(possib, key=stepby)
         if pred[-1] == 1:
             guess = 2
@@ -51,13 +60,16 @@ def player(prev_play, opponent_history=[]):
 
     return guess
 
+
 def stepby(key):
-   return steps[key]
+    return steps[key]
+
 
 def join(moves):
     return "".join(moves)
 
 
+###########
 
 while True:
 
@@ -72,12 +84,11 @@ while True:
 
     if startGame:
 
-
         if stateResult is False:
             timer = time.time() - initialTime
             cv2.putText(imgBG, str(int(timer)), (970, 675), cv2.FONT_HERSHEY_SIMPLEX, 6, (230, 230, 250), 16)
 
-            if timer > 3:
+            if timer > 1:
                 stateResult = True
                 timer = 0
 
@@ -95,7 +106,7 @@ while True:
                     if fingers == [0, 1, 1, 0, 0]:
                         playerMove = 3  # scissors
 
-                    #opponent_history.append(playerMove)
+                    # opponent_history.append(playerMove)
                     print(opponent_history)
                     player(playerMove, opponent_history=[])
 
@@ -124,7 +135,7 @@ while True:
                             (playerMove == 3 and randomNumber == 3):
                         display = "IT'S A TIE"
 
-                    #print(playerMove)
+                    # print(playerMove)
 
     imgBG[398:897, 1220:1720] = imgScaled
 
