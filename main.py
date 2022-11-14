@@ -1,9 +1,12 @@
+from pygame import mixer
+mixer.init()
 import random
 import time
 import keyboard
 import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector
+#from playsound import playsound
 
 
 # PRESS SPACE TO START.
@@ -22,7 +25,7 @@ stateResult = False
 startGame = False
 scores = [0, 0]
 display = ""
-opponent_history = []
+#opponent_history = []
 
 steps = {}
 
@@ -35,7 +38,7 @@ def player(prev_play, opponent_history=[]):
     prev_play = playerMove
     if prev_play != "":
         opponent_history.append(prev_play)
-    num = 2
+    num = 3
     history = opponent_history
     guess = 3
     if len(history) > num:
@@ -56,7 +59,9 @@ def player(prev_play, opponent_history=[]):
         if pred[-1] == 3:
             guess = 1
     print(guess)
+    print(opponent_history)
     randomNumber = guess
+
 
     return guess
 
@@ -86,11 +91,17 @@ while True:
 
         if stateResult is False:
             timer = time.time() - initialTime
-            cv2.putText(imgBG, str(int(timer)), (970, 675), cv2.FONT_HERSHEY_SIMPLEX, 6, (230, 230, 250), 16)
+            #cv2.putText(imgBG, str(int(timer)), (970, 675), cv2.FONT_HERSHEY_SIMPLEX, 6, (230, 230, 250), 16)
+            cv2.putText(imgBG, str("GO"), (940, 665), cv2.FONT_HERSHEY_SIMPLEX, 4, (230, 230, 250), 10)
+
 
             if timer > 1:
                 stateResult = True
                 timer = 0
+                # for playing note.mp3 file
+                #playsound('retro.mp3')      Playsound slowed down opencv try pygame mixer:
+                sound = mixer.Sound('retro.mp3')
+                sound.play()
 
                 if hands:
                     playerMove = None
@@ -107,11 +118,11 @@ while True:
                         playerMove = 3  # scissors
 
                     # opponent_history.append(playerMove)
-                    print(opponent_history)
+                    #print(opponent_history)
                     player(playerMove, opponent_history=[])
 
                     print(playerMove)
-                    print(opponent_history)
+                    #print(opponent_history)
                     ########
                     randomNumber = random.randint(1, 3)
 
