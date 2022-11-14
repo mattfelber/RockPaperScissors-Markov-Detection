@@ -1,11 +1,10 @@
 from pygame import mixer
-import random
 import time
 import keyboard
 import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector
-# from playsound import playsound
+
 
 
 #            PRESS SPACE TO START
@@ -144,14 +143,12 @@ def stats():
 while True:
     imgBG = cv2.imread("Stuff/BG.png")
     success, img = cap.read()
-
     imgScaled = cv2.resize(img, (0, 0), None, 1.04, 1.04)
     imgScaled = imgScaled[:, 0:500]
 
     hands, img = detector.findHands(imgScaled)
 
     if startGame:
-
         if stateResult is False:
             timer = time.time() - initialTime
 
