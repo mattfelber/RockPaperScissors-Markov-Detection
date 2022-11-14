@@ -1,18 +1,18 @@
 from pygame import mixer
-mixer.init()
 import random
 import time
 import keyboard
 import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector
-#from playsound import playsound
+
+# from playsound import playsound
 
 
 # PRESS SPACE TO START.
 # THE A.I. USES A MARKOV CHAIN AND HAND GESTURE DETECTION FOR MOVING.
 
-
+mixer.init()
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 640)  # width
@@ -25,58 +25,62 @@ stateResult = False
 startGame = False
 scores = [0, 0]
 display = ""
-#opponent_history = []
-
 steps = {}
 
+global randomNumber
+global prev_play
 
-##############
-# markov chain:
+
+opponent_history = []
+steps = {}
+guessnum = 1
 def player(prev_play, opponent_history=[]):
-    global randomNumber
+    global randomNumber, guessnum
     global playerMove
-    prev_play = playerMove
+
+    #prev_play = playerMove
     if prev_play != "":
         opponent_history.append(prev_play)
     num = 3
     history = opponent_history
-    guess = 3
+    guess = 'S'
+    guessnum = 3
     if len(history) > num:
         patterns = join(history[-num:])
         if join(history[-(num + 1):]) in steps.keys():
             steps[join(history[-(num + 1):])] += 1
         else:
             steps[join(history[-(num + 1):])] = 1
-        possib = [patterns + 1, patterns + 2, patterns + 3]
+        possib = [patterns + 'R', patterns + 'P', patterns + 'S']
         for i in possib:
             if not i in steps.keys():
-                steps[i] = 0  ###
+                steps[i] = 0               ###
         pred = max(possib, key=stepby)
-        if pred[-1] == 1:
-            guess = 2
-        if pred[-1] == 2:
-            guess = 3
-        if pred[-1] == 3:
-            guess = 1
+        if pred[-1] == 'R':
+            guess = 'P'
+            guessnum = 2
+        if pred[-1] == 'P':
+            guess = 'S'
+            guessnum = 3
+        if pred[-1] == 'S':
+            guess = 'R'
+            guessnum = 1
     print(guess)
-    print(opponent_history)
-    randomNumber = guess
-
+    print(guessnum)
+    randomNumber = guessnum
 
     return guess
 
-
 def stepby(key):
-    return steps[key]
-
+   return steps[key]
 
 def join(moves):
     return "".join(moves)
 
-
 ###########
 
 while True:
+    global playerMove
 
     imgBG = cv2.imread("Stuff/BG.png")
     success, img = cap.read()
@@ -91,15 +95,14 @@ while True:
 
         if stateResult is False:
             timer = time.time() - initialTime
-            #cv2.putText(imgBG, str(int(timer)), (970, 675), cv2.FONT_HERSHEY_SIMPLEX, 6, (230, 230, 250), 16)
+            # cv2.putText(imgBG, str(int(timer)), (970, 675), cv2.FONT_HERSHEY_SIMPLEX, 6, (230, 230, 250), 16)
             cv2.putText(imgBG, str("GO"), (940, 665), cv2.FONT_HERSHEY_SIMPLEX, 4, (230, 230, 250), 10)
-
 
             if timer > 1:
                 stateResult = True
                 timer = 0
                 # for playing note.mp3 file
-                #playsound('retro.mp3')      Playsound slowed down opencv try pygame mixer:
+                # playsound('retro.mp3')      Playsound slowed down opencv try pygame mixer:
                 sound = mixer.Sound('retro.mp3')
                 sound.play()
 
@@ -110,21 +113,20 @@ while True:
 
                     if fingers == [0, 0, 0, 0, 0]:
                         playerMove = 1  # rock
+                        prev_play = 'R'
 
                     if fingers == [1, 1, 1, 1, 1]:
                         playerMove = 2  # paper
+                        prev_play = 'P'
 
                     if fingers == [0, 1, 1, 0, 0]:
                         playerMove = 3  # scissors
+                        prev_play = 'S'
 
-                    # opponent_history.append(playerMove)
-                    #print(opponent_history)
-                    player(playerMove, opponent_history=[])
-
-                    print(playerMove)
-                    #print(opponent_history)
-                    ########
-                    randomNumber = random.randint(1, 3)
+                    # print(playerMove)
+                    player(prev_play, opponent_history)
+                    print(opponent_history)
+                    # randomNumber = random.randint(1, 3)
 
                     imgAI = cv2.imread(f'Stuff/{randomNumber}.png', cv2.IMREAD_UNCHANGED)
                     imgBG = cvzone.overlayPNG(imgBG, imgAI, (295, 398))
