@@ -10,7 +10,7 @@ from cvzone.HandTrackingModule import HandDetector
 
 #            PRESS SPACE TO START
 # ----- THE AI USES A MARKOV CHAIN AND      -----
-# ----- HAND GESTURE DETECTION FOR MOVES.   -----
+# ----- HAND GESTURE DETECTION FOR MOVES   -----
 
 
 mixer.init()
