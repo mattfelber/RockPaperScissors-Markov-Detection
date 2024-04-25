@@ -1,4 +1,5 @@
-Rock Paper Scissors A.I. game
-with a ~Markov chain~ for moves, and gesture detection.
+A.I. project - Rock paper scissors game.
+-Markov chain for move prediction.
+-gesture detection.
 
 ![](/rps.png)
