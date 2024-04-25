@@ -1,4 +1,4 @@
-Rock Paper Scissors A.I. 
-with a Markov chain algorithm for moves, and gesture detection.
+Rock Paper Scissors A.I. game
+with a ~Markov chain~ for moves, and gesture detection.
 
 ![](/rps.png)
